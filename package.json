@@ -1,0 +1,25 @@
+{
+  "name": "advent-of-code-2020",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^14.11.11",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-import-resolver-typescript": "^2.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.1.2",
+    "ts-loader": "^8.0.7",
+    "ts-node": "^9.0.0",
+    "typescript": "^3.9.7"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "scripts": {}
+}
