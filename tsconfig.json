@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "lib": ["es2020", "dom"],
+    "removeComments": true,
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "sourceMap": true,
+    "target": "es2015",
+    "module": "commonjs",
+    "outDir": ".build",
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "strict": false,
+    "esModuleInterop": true,
+    "declaration": false
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules/**/*", ".vscode/**/*"]
+}
