@@ -42,17 +42,17 @@ export type State = {
   instructionPtr: number
 }
 
-export const runProgram = (prog: Instruction[], state: State = { instructionPtr: 0, acc: 0 }): State => {
+export const runProgram = (prog: readonly Instruction[], state: State = { instructionPtr: 0, acc: 0 }): State => {
   while (!isComplete(prog, state)) {
     state = runInstruction(prog, state)
   }
   return state
 }
 
-export const isComplete = (prog: Instruction[], state: State): boolean =>
+export const isComplete = (prog: readonly Instruction[], state: State): boolean =>
   state.instructionPtr === prog.length
 
-export const runInstruction = (prog: Instruction[], state: State = { instructionPtr: 0, acc: 0 }): State => {
+export const runInstruction = (prog: readonly Instruction[], state: State = { instructionPtr: 0, acc: 0 }): State => {
   if (isComplete(prog, state)) return state
 
   const inst = prog[state.instructionPtr]
