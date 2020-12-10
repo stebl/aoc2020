@@ -13,18 +13,18 @@ export const count = (adapters: readonly Adapter[], index: number): number => {
     if (index in seen) return seen[index]
     if (index === adapters.length - 1) return 1
 
-    let totalRemovable = 0
+    let branches = 0
     const current = adapters[index]
 
     for (const jIndex of range(index + 1, adapters.length)) {
       const candidateNext = adapters[jIndex]
 
       const canBranch = candidateNext - current <= 3
-      if (canBranch) totalRemovable += _count(adapters, jIndex)
+      if (canBranch) branches += _count(adapters, jIndex)
     }
 
-    seen[index] = totalRemovable
-    return totalRemovable
+    seen[index] = branches
+    return branches
   }
 
   return _count(adapters, index)
