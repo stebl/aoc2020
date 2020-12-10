@@ -1,10 +1,7 @@
 import { readlines } from "./io"
+import { range } from "./util"
 
 type Adapter = number
-
-export const range = (start: number, end: number): number[] => {
-  return Array.from({ length: end - start }, (_, i) => i + start)
-}
 
 export const count = (adapters: readonly Adapter[], index: number): number => {
   const seen: Record<number, number> = {}
