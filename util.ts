@@ -27,6 +27,14 @@ export const groupLines = (lines: readonly string[], separator: string = ''): st
 }
 
 /**
+ * Produces a range of numbers from start (inclusive) to end (exclu
+ * Most useful for iterating arrays by index
+ *
+ * for (i in range(0, arr.length)) { arr[i] }
+ */
+export const range = (start: number, end: number): number[] => Array.from({ length: end - start }, (_, i) => i + start)
+
+/**
  * Program execution
  */
 
