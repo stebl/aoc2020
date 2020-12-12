@@ -35,7 +35,9 @@ export const groupLines = (lines: readonly string[], separator: string = ''): st
 export const range = (start: number, end: number): number[] => Array.from({ length: end - start }, (_, i) => i + start)
 
 /**
- * Program execution
+ *
+ * Virtual machine
+ *
  */
 
 export const operations = ['acc', 'jmp', 'nop'] as const
@@ -79,3 +81,136 @@ export const runInstruction = (prog: readonly Instruction[], state: State = { in
   return newState
 }
 
+
+/**
+ *
+ * Grids and map manipulation
+ *
+ */
+
+
+/**
+ * Map problems use ascii tiles illegible to the average human.
+ *
+ * Converts a map key,
+ * {
+ *   '#': 'occupied',
+ *   '.': 'space'
+ * }
+ *
+ * into a quick and dirty bidirectional map,
+ * {
+ *   '#': 'occupied',
+ *   '.': 'space',
+ *   'occupied': '#',
+ *   'space': '.'
+ * }
+ */
+export const mapping = (key: { [s: string]: string }) => {
+  const result = {}
+  for (const [k, v] of Object.entries(key)) {
+    result[k] = v
+    result[v] = k
+  }
+  return result
+}
+
+export class Grid<T extends string> {
+
+  grid: T[][]
+
+  /**
+   *
+   * An input file of,
+   *  ABC
+   *  DEF
+   *
+   * Should be parsed into,
+   *  ['ABC', 'DEF']
+   *
+   * And will be indexed as,
+   *  this.grid[y][x]
+   *
+   * where [0,0] is the top left corner
+   *
+   */
+  constructor(lines: string[]) {
+    this.grid = lines.map((line) => line.split('')) as T[][]
+  }
+
+  count(callback: (t: T, y?: number, x?: number) => boolean): number {
+    const result = []
+    for (const y of range(0, this.grid.length)) {
+      for (const x of range(0, this.grid[y].length)) {
+        const t = this.grid[y][x]
+        if (callback(t, y, x)) result.push(t)
+      }
+    }
+    return result.length
+  }
+
+  forEach(callback: (t: T, y: number, x: number) => void) {
+    for (const y of range(0, this.grid.length)) {
+      for (const x of range(0, this.grid[y].length)) {
+        callback(this.grid[y][x], y, x)
+      }
+    }
+  }
+
+  adjacentOcta(y: number, x: number): (T | undefined)[] {
+    return [
+      this.get(y - 1, x - 1),
+      this.get(y - 1, x),
+      this.get(y - 1, x + 1),
+      this.get(y,     x + 1),
+      this.get(y + 1, x + 1),
+      this.get(y + 1, x),
+      this.get(y + 1, x - 1),
+      this.get(y,     x - 1),
+    ]
+  }
+
+  findAlong(
+    y: number, x: number,
+    dy: number, dx: number,
+    criteria: T[]
+  ): T | undefined {
+    while (true) {
+      y += dy
+      x += dx
+      if (!this.validTile(y, x)) break
+      const t = this.get(y, x)
+      if (criteria.includes(t)) return t
+    }
+  }
+
+  findInLineOfSight(y: number, x: number, criteria: T[]): (T | undefined)[] {
+    return [
+      this.findAlong(y, x, -1, -1, criteria),
+      this.findAlong(y, x, -1, 0, criteria),
+      this.findAlong(y, x, -1, 1, criteria),
+      this.findAlong(y, x, 0,  1, criteria),
+      this.findAlong(y, x, 1,  1, criteria),
+      this.findAlong(y, x, 1,  0, criteria),
+      this.findAlong(y, x, 1, -1, criteria),
+      this.findAlong(y, x, 0, -1, criteria),
+    ]
+  }
+
+  set(y: number, x: number, t: T): void {
+    if (!this.validTile(y, x)) throw new Error(`Index out of bounds (${y}, ${x})`)
+    this.grid[y][x] = t
+  }
+
+  get(y: number, x: number): T | undefined {
+    return this.validTile(y, x) ? this.grid[y][x] : undefined
+  }
+
+  validTile(y: number, x: number): boolean {
+    return 0 <= y && y < this.grid.length && 0 <= x && x < this.grid[y].length
+  }
+
+  print(): void {
+    this.grid.forEach(line => console.log(line.join('')))
+  }
+}
