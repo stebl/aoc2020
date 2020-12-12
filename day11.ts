@@ -1,6 +1,6 @@
 
 import { readlines } from "./io"
-import { Grid, mapping } from "./util"
+import { Grid, mapping, sumReducer } from "./util"
 
 (async () => {
   const raw = await readlines('day11.txt')
@@ -37,5 +37,5 @@ import { Grid, mapping } from "./util"
   }
 
 
-  console.log(grid.count((t) => key[t] === 'occupied'))
+  console.log(grid.flat().map((t) => key[t] === 'occupied' ? 1 : 0).reduce(sumReducer, 0))
 })()

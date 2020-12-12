@@ -34,6 +34,9 @@ export const groupLines = (lines: readonly string[], separator: string = ''): st
  */
 export const range = (start: number, end: number): number[] => Array.from({ length: end - start }, (_, i) => i + start)
 
+export const sumReducer = (p: number, c: number) => p + c
+export const productReducer = (p: number, c: number) => p * c
+
 /**
  *
  * Virtual machine
@@ -138,15 +141,8 @@ export class Grid<T extends string> {
     this.grid = lines.map((line) => line.split('')) as T[][]
   }
 
-  count(callback: (t: T, y?: number, x?: number) => boolean): number {
-    const result = []
-    for (const y of range(0, this.grid.length)) {
-      for (const x of range(0, this.grid[y].length)) {
-        const t = this.grid[y][x]
-        if (callback(t, y, x)) result.push(t)
-      }
-    }
-    return result.length
+  flat(): T[] {
+    return this.grid.flat()
   }
 
   forEach(callback: (t: T, y: number, x: number) => void) {
@@ -170,7 +166,7 @@ export class Grid<T extends string> {
     ]
   }
 
-  findAlong(
+  findFirstAlong(
     y: number, x: number,
     dy: number, dx: number,
     criteria: T[]
@@ -186,14 +182,14 @@ export class Grid<T extends string> {
 
   findInLineOfSight(y: number, x: number, criteria: T[]): (T | undefined)[] {
     return [
-      this.findAlong(y, x, -1, -1, criteria),
-      this.findAlong(y, x, -1, 0, criteria),
-      this.findAlong(y, x, -1, 1, criteria),
-      this.findAlong(y, x, 0,  1, criteria),
-      this.findAlong(y, x, 1,  1, criteria),
-      this.findAlong(y, x, 1,  0, criteria),
-      this.findAlong(y, x, 1, -1, criteria),
-      this.findAlong(y, x, 0, -1, criteria),
+      this.findFirstAlong(y, x, -1, -1, criteria),
+      this.findFirstAlong(y, x, -1, 0, criteria),
+      this.findFirstAlong(y, x, -1, 1, criteria),
+      this.findFirstAlong(y, x, 0,  1, criteria),
+      this.findFirstAlong(y, x, 1,  1, criteria),
+      this.findFirstAlong(y, x, 1,  0, criteria),
+      this.findFirstAlong(y, x, 1, -1, criteria),
+      this.findFirstAlong(y, x, 0, -1, criteria),
     ]
   }
 
