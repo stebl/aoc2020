@@ -91,6 +91,8 @@ export const runInstruction = (prog: readonly Instruction[], state: State = { in
  *
  */
 
+export type Coord = { y: number, x: number }
+
 
 /**
  * Map problems use ascii tiles illegible to the average human.
